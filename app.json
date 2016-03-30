@@ -1,0 +1,13 @@
+{
+  "name": "Silex Ticked Sistem",
+  "description": "Silex project.",
+  "repository": "https://github.com/eminemutlu/Silex_Ticked_Sistem",
+  "keywords": ["silex"],
+  "addons": [
+    "blackfire",
+    "heroku-postgresql:hobby-dev"
+  ],
+  "buildpacks": [
+    { "url": "" }
+  ]
+}
