@@ -27,7 +27,8 @@
         "symfony/validator"     : "~2.8",
         "symfony/yaml"          : "~2.8",
         "twig/twig"             : "~1.23",
-        "twitter/bootstrap"     : "~3.3.6"
+        "twitter/bootstrap"     : "~3.3.6",
+		"dflydev/doctrine-orm-service-provider":"1.0.6"
     },
     "require-dev": {
         "symfony/browser-kit"   : "~2.8",

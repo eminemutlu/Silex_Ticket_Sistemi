@@ -20,7 +20,7 @@ class ControllerProvider implements ControllerProviderInterface
         $app->error([$this, 'error']);
 
         $controllers = $app['controllers_factory'];
-
+		
         $controllers
             ->get('/', [$this, 'homepage'])
             ->bind('homepage');
@@ -28,7 +28,7 @@ class ControllerProvider implements ControllerProviderInterface
         $controllers
             ->get('/login', [$this, 'login'])
             ->bind('login');
-
+      	
         $controllers
             ->get('/doctrine', [$this, 'doctrine'])
             ->bind('doctrine');
@@ -46,21 +46,28 @@ class ControllerProvider implements ControllerProviderInterface
 
     public function homepage(App $app)
     {
-        $app['session']->getFlashBag()->add('warning', 'Warning flash message');
+        /*$app['session']->getFlashBag()->add('warning', 'Warning flash message');
         $app['session']->getFlashBag()->add('info', 'Info flash message');
         $app['session']->getFlashBag()->add('success', 'Success flash message');
-        $app['session']->getFlashBag()->add('danger', 'Danger flash message');
+        $app['session']->getFlashBag()->add('danger', 'Danger flash message');*/
 
         return $app['twig']->render('index.html.twig');
     }
+	
 
     public function login(App $app)
     {
-        return $app['twig']->render('login.html.twig', array(
-            'error' => $app['security.utils']->getLastAuthenticationError(),
-            'username' => $app['security.utils']->getLastUsername(),
-        ));
-    }
+		 /*if ($request->isMethod('POST')) {
+			var_dump("burda");	die(); 
+		 }*/
+		
+		  return $app['twig']->render('login.html.twig', array(
+				'error' => $app['security.utils']->getLastAuthenticationError(),
+				'username' => $app['security.utils']->getLastUsername(),
+			));		
+			
+			
+	}
 
     public function doctrine(App $app)
     {
@@ -74,24 +81,32 @@ class ControllerProvider implements ControllerProviderInterface
         $builder = $app['form.factory']->createBuilder('form');
 
         $choices = array('choice a', 'choice b', 'choice c');
+		$category = array('Bilgi işlem', 'Kurumsal İletişim', 'İnsan Kaynakları');
 
         $form = $builder
-            ->add(
-                $builder->create('sub-form', 'form')
+            /*->add(
+                $builder->create('Ticket-Form', 'form')
                     ->add('subformemail1', 'email', array(
                         'constraints' => array(new Assert\NotBlank(), new Assert\Email()),
                         'attr' => array('placeholder' => 'email constraints'),
                         'label' => 'A custom label : ',
                     ))
                     ->add('subformtext1', 'text')
-            )
+            		)
             ->add('text1', 'text', array(
                 'constraints' => new Assert\NotBlank(),
                 'attr' => array('placeholder' => 'not blank constraints'),
+            ))*/
+            ->add('category', 'choice', array(
+                'choices' => $category,
+                'multiple' => true,
+                'expanded' => true,
             ))
-            ->add('text2', 'text', array('attr' => array('class' => 'span1', 'placeholder' => '.span1')))
-            ->add('text3', 'text', array('attr' => array('class' => 'span2', 'placeholder' => '.span2')))
-            ->add('text4', 'text', array('attr' => array('class' => 'span3', 'placeholder' => '.span3')))
+            ->add('subject', 'text', array('attr' => array('class' => 'span1', 'placeholder' => 'Subject')))
+            ->add('content', 'text', array('attr' => array('class' => 'span1', 'placeholder' => 'Content')))
+            ->add('level', 'text', array('attr' => array('class' => 'span2', 'placeholder' => 'Level')))
+            ->add('file', 'file')
+			/*->add('text4', 'text', array('attr' => array('class' => 'span3', 'placeholder' => '.span3')))
             ->add('text5', 'text', array('attr' => array('class' => 'span4', 'placeholder' => '.span4')))
             ->add('text6', 'text', array('attr' => array('class' => 'span5', 'placeholder' => '.span5')))
             ->add('text8', 'text', array('disabled' => true, 'attr' => array('placeholder' => 'disabled field')))
@@ -133,7 +148,6 @@ class ControllerProvider implements ControllerProviderInterface
             ->add('time', 'time')
             ->add('birthday', 'birthday')
             ->add('checkbox', 'checkbox')
-            ->add('file', 'file')
             ->add('radio', 'radio')
             ->add('password_repeated', 'repeated', array(
                 'type' => 'password',
@@ -141,13 +155,33 @@ class ControllerProvider implements ControllerProviderInterface
                 'options' => array('required' => true),
                 'first_options' => array('label' => 'Password'),
                 'second_options' => array('label' => 'Repeat Password'),
-            ))
+            ))*/
             ->add('submit', 'submit')
-            ->getForm()
-        ;
-
+            ->getForm();
+			
+		$values = array();
+		$request = $app['request']; 
         if ($form->handleRequest($request)->isSubmitted()) {
             if ($form->isValid()) {
+				if ($request->isMethod('POST')) {
+					$files = $request->files->get($form->getName());
+					//$path = __DIR__.'/../web/upload/';
+					//$filename = $files['file']->getClientOriginalName();
+					//$files['FileUpload']->move($path,$filename);
+					//var_dump($filename);die();
+					$values = $request->request->all();
+					//$app['db']->insert('form', array('subformemail1	' => $form["subformtext1"]->getData(), 'subformtext1' => $form["subformtext1"]->getData(), 'text1' => $form["subformtext1"]->getData()));
+					$app['db']->insert('forms_ticket', array(
+						'user_id' => 1, 
+						'subject' => $values["form"]["subject"], 
+						'content' => $values["form"]["content"], 
+						'level' => $values["form"]["level"],
+						'file' => 1,
+						'created_at	' => date("Y-m-d H:i:s"),
+						)
+					);
+				}
+				
                 $app['session']->getFlashBag()->add('success', 'The form is valid');
             } else {
                 $form->addError(new FormError('This is a global error'));

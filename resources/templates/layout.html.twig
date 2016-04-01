@@ -23,23 +23,21 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="{{ url('homepage') }}">Silex Emine Mutlu</a>
+          <a class="navbar-brand" href="{{ url('homepage') }}">Ticket Sistemi</a>
           </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li {% if 'homepage' == active %}class="active"{% endif %}><a href="{{ url('homepage') }}">{{ 'Homepage'|trans }}</a></li>
-            <li {% if 'cache' == active %}class="active"{% endif %}><a href="{{ url('cache') }}">Cache sample</a></li>
-            <li {% if 'form' == active %}class="active"{% endif %}><a href="{{ url('form') }}">Form sample</a></li>
-            <li {% if 'doctrine' == active %}class="active"{% endif %}><a href="{{ url('doctrine') }}">Doctrine</a></li>
+            <li {% if 'form' == active %}class="active"{% endif %}><a href="{{ url('form') }}">{{ 'Ticket'|trans }}</a></li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account <span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hesaplar <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 {% if is_granted('ROLE_USER') %}
-                  <li><a href="{{ path('logout') }}">{{ 'Logout'|trans }}</a></li>
+                  <li><a href="{{ path('logout') }}">Çıkış</a></li>
                 {% else %}
-                  <li><a href="{{ path('login') }}">{{ 'Login'|trans }}</a></li>
-                  <li><a href="#">{{ 'Register'|trans }}</a></li>
+                  <li><a href="{{ path('login') }}">Giriş</a></li>
+                  <li><a href="#">Kayıt</a></li>
                 {% endif %}
               </ul>
             </li>
@@ -60,7 +58,7 @@
       {% block content '' %}
 
       <footer>
-        <a href="https://github.com/eminemutlu/Silex_Ticked_Sistem">Silex Emine Mutlu</a>
+        &nbsp;
       </footer>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

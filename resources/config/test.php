@@ -4,6 +4,9 @@ $app['debug'] = true;
 
 // Doctrine: DB options
 $app['db.options'] = array(
-    'driver' => 'pdo_sqlite',
-    'path' => __DIR__.'/../../var/database_test.dat',
+	'dbname' => 'ticket',
+    'user' => 'root',
+    'password' => '123456',
+    'host' => 'localhost',
+    'driver' => 'pdo_mysql',	
 );
