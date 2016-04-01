@@ -30,37 +30,21 @@ class ControllerProvider implements ControllerProviderInterface
             ->bind('login');
       	
         $controllers
-            ->get('/doctrine', [$this, 'doctrine'])
-            ->bind('doctrine');
-
-        $controllers
             ->match('/form', [$this, 'form'])
             ->bind('form');
 
-        $controllers
-            ->get('/cache', [$this, 'cache'])
-            ->bind('cache');
 
         return $controllers;
     }
 
     public function homepage(App $app)
     {
-        /*$app['session']->getFlashBag()->add('warning', 'Warning flash message');
-        $app['session']->getFlashBag()->add('info', 'Info flash message');
-        $app['session']->getFlashBag()->add('success', 'Success flash message');
-        $app['session']->getFlashBag()->add('danger', 'Danger flash message');*/
-
         return $app['twig']->render('index.html.twig');
     }
 	
 
     public function login(App $app)
     {
-		 /*if ($request->isMethod('POST')) {
-			var_dump("burda");	die(); 
-		 }*/
-		
 		  return $app['twig']->render('login.html.twig', array(
 				'error' => $app['security.utils']->getLastAuthenticationError(),
 				'username' => $app['security.utils']->getLastUsername(),
@@ -84,19 +68,6 @@ class ControllerProvider implements ControllerProviderInterface
 		$category = array('Bilgi işlem', 'Kurumsal İletişim', 'İnsan Kaynakları');
 
         $form = $builder
-            /*->add(
-                $builder->create('Ticket-Form', 'form')
-                    ->add('subformemail1', 'email', array(
-                        'constraints' => array(new Assert\NotBlank(), new Assert\Email()),
-                        'attr' => array('placeholder' => 'email constraints'),
-                        'label' => 'A custom label : ',
-                    ))
-                    ->add('subformtext1', 'text')
-            		)
-            ->add('text1', 'text', array(
-                'constraints' => new Assert\NotBlank(),
-                'attr' => array('placeholder' => 'not blank constraints'),
-            ))*/
             ->add('category', 'choice', array(
                 'choices' => $category,
                 'multiple' => true,
@@ -106,62 +77,14 @@ class ControllerProvider implements ControllerProviderInterface
             ->add('content', 'text', array('attr' => array('class' => 'span1', 'placeholder' => 'Content')))
             ->add('level', 'text', array('attr' => array('class' => 'span2', 'placeholder' => 'Level')))
             ->add('file', 'file')
-			/*->add('text4', 'text', array('attr' => array('class' => 'span3', 'placeholder' => '.span3')))
-            ->add('text5', 'text', array('attr' => array('class' => 'span4', 'placeholder' => '.span4')))
-            ->add('text6', 'text', array('attr' => array('class' => 'span5', 'placeholder' => '.span5')))
-            ->add('text8', 'text', array('disabled' => true, 'attr' => array('placeholder' => 'disabled field')))
-            ->add('textarea', 'textarea')
-            ->add('email', 'email')
-            ->add('integer', 'integer')
-            ->add('money', 'money')
-            ->add('number', 'number')
-            ->add('password', 'password')
-            ->add('percent', 'percent')
-            ->add('search', 'search')
-            ->add('url', 'url')
-            ->add('choice1', 'choice', array(
-                'choices' => $choices,
-                'multiple' => true,
-                'expanded' => true,
-            ))
-            ->add('choice2', 'choice', array(
-                'choices' => $choices,
-                'multiple' => false,
-                'expanded' => true,
-            ))
-            ->add('choice3', 'choice', array(
-                'choices' => $choices,
-                'multiple' => true,
-                'expanded' => false,
-            ))
-            ->add('choice4', 'choice', array(
-                'choices' => $choices,
-                'multiple' => false,
-                'expanded' => false,
-            ))
-            ->add('country', 'country')
-            ->add('language', 'language')
-            ->add('locale', 'locale')
-            ->add('timezone', 'timezone')
-            ->add('date', 'date')
-            ->add('datetime', 'datetime')
-            ->add('time', 'time')
-            ->add('birthday', 'birthday')
-            ->add('checkbox', 'checkbox')
-            ->add('radio', 'radio')
-            ->add('password_repeated', 'repeated', array(
-                'type' => 'password',
-                'invalid_message' => 'The password fields must match.',
-                'options' => array('required' => true),
-                'first_options' => array('label' => 'Password'),
-                'second_options' => array('label' => 'Repeat Password'),
-            ))*/
             ->add('submit', 'submit')
             ->getForm();
 			
+		
 		$values = array();
 		$request = $app['request']; 
-        if ($form->handleRequest($request)->isSubmitted()) {
+        
+		if ($form->handleRequest($request)->isSubmitted()) {
             if ($form->isValid()) {
 				if ($request->isMethod('POST')) {
 					$files = $request->files->get($form->getName());
@@ -170,7 +93,6 @@ class ControllerProvider implements ControllerProviderInterface
 					//$files['FileUpload']->move($path,$filename);
 					//var_dump($filename);die();
 					$values = $request->request->all();
-					//$app['db']->insert('form', array('subformemail1	' => $form["subformtext1"]->getData(), 'subformtext1' => $form["subformtext1"]->getData(), 'text1' => $form["subformtext1"]->getData()));
 					$app['db']->insert('forms_ticket', array(
 						'user_id' => 1, 
 						'subject' => $values["form"]["subject"], 
@@ -191,16 +113,10 @@ class ControllerProvider implements ControllerProviderInterface
 
         return $app['twig']->render('form.html.twig', array(
             'form' => $form->createView(),
+			//'liste' => $app['db']->fetchAll('SELECT * FROM forms_ticket'),
         ));
     }
 
-    public function cache(App $app)
-    {
-        $response = new Response($app['twig']->render('cache.html.twig', array('date' => date('Y-M-d h:i:s'))));
-        $response->setTtl(10);
-
-        return $response;
-    }
 
     public function error(\Exception $e, $code)
     {
